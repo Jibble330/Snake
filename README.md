@@ -1,2 +1,2 @@
 # Snake
-A quick Snake clone in Go
+This is just a quick Snake clone written in Go.
