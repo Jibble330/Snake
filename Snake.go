@@ -8,8 +8,8 @@ import (
     "image"
     "image/color"
     "fmt"
-    "path"
-    "strings"
+    //"path"
+    //"strings"
 
     _ "image/png"
 
@@ -106,6 +106,48 @@ func (s *Snake) Draw() {
         imd.Push(UpperRight)
         imd.Rectangle(0)
     }
+    if len(s.Pieces) > 0 {
+        s.DrawFace()
+    }
+}
+
+func (s *Snake) DrawFace() {
+    imd.Color = colornames.Gray
+    var toleft, fromleft, toright, fromright pixel.Vec
+    switch s.Direction {
+    case LEFT:
+        fromleft = pixel.V(4, 4)
+        toleft = pixel.V(10, 6).Add(fromleft)
+        
+        fromright = pixel.V(4, TILE_SIZE-9)
+        toright = fromright.Sub(pixel.V(-10, 6))
+    case RIGHT:
+        fromleft = pixel.V(TILE_SIZE-19, 4)
+        toleft = pixel.V(10, 6).Add(fromleft)
+        
+        fromright = pixel.V(TILE_SIZE-19, TILE_SIZE-9)
+        toright = fromright.Sub(pixel.V(-10, 6))
+    case UP:
+        fromleft = pixel.V(4, TILE_SIZE-19)
+        toleft = pixel.V(6, 10).Add(fromleft)
+        
+        fromright = pixel.V(TILE_SIZE-9, TILE_SIZE-19)
+        toright = fromright.Sub(pixel.V(6, -10))
+    case DOWN:
+        fromleft = pixel.V(4, 4)
+        toleft = pixel.V(6, 10).Add(fromleft)
+        
+        fromright = pixel.V(TILE_SIZE-9, 4)
+        toright = fromright.Sub(pixel.V(6, -10))
+    }
+
+   start := pixel.V((s.Pieces[len(s.Pieces)-1].X*TILE_SIZE)+2, (s.Pieces[len(s.Pieces)-1].Y*TILE_SIZE)+2)
+
+   imd.Push(start.Add(fromleft), start.Add(toleft))
+   imd.Rectangle(0)
+
+   imd.Push(start.Add(fromright), start.Add(toright))
+   imd.Rectangle(0)
 }
 
 func (s *Snake) Add() {
@@ -181,8 +223,8 @@ func run() {
     screen := pixel.R(PositionX, PositionY, SizeX, SizeY)
 
     //Only works with an exe
-    ImgPath := path.Join(path.Dir(strings.ReplaceAll(os.Args[0], "\\", "/")), "Snake.png") //Only works with an exe ("go build")
-    //ImgPath := "Snake.png" //Only works with "go run"
+    //ImgPath := path.Join(path.Dir(strings.ReplaceAll(os.Args[0], "\\", "/")), "Snake.png") //Only works with an exe ("go build")
+    ImgPath := "Snake.png" //Only works with "go run"
 
     icon, err := LoadPicture(ImgPath)
     if err != nil {
